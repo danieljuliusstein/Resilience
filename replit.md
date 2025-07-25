@@ -63,14 +63,16 @@ The application manages four main entities:
 - **Testimonials**: Customer review display with ratings
 - **Estimate Calculator**: Multi-step form for project cost estimation
 - **Contact Form**: Lead capture with form validation
-- **Client Dashboard**: Project tracking interface for customers
+- **Client Resource Center**: Self-service hub with maintenance guides, warranties, and FAQs
+- **Live Chat System**: Real-time support with floating chat button and session management
 
 ## Data Flow
 
 1. **Lead Generation**: Visitors fill out contact forms, data is validated and stored
 2. **Estimate Process**: Multi-step calculator collects project requirements and generates cost estimates
 3. **Project Management**: Leads convert to projects with progress tracking
-4. **Client Communication**: Dashboard provides real-time project updates
+4. **Client Communication**: Magic links provide project tracking; live chat offers real-time support
+5. **Email Drip Campaigns**: Automated 3-email sequence nurtures leads after quote requests
 5. **Testimonial Collection**: Completed projects generate customer reviews
 
 ## External Dependencies
@@ -111,3 +113,18 @@ The application manages four main entities:
 - **Database**: `npm run db:push` applies schema changes to PostgreSQL
 
 The application is designed for deployment on platforms like Replit, Vercel, or any Node.js hosting service that supports PostgreSQL databases.
+
+## Recent Changes
+
+### January 25, 2025
+- **Completed Replit Agent to Replit Migration**: Successfully migrated project from Replit Agent environment
+- **Updated Email Service**: Switched from EmailOctopus to SendGrid for production email delivery
+- **Added Deployment Configurations**: Created comprehensive Hetzner Cloud deployment setup including:
+  - Docker configuration with multi-stage builds
+  - PM2 ecosystem configuration for production
+  - NGINX reverse proxy configuration with SSL support
+  - Automated server setup and deployment scripts
+  - Database backup automation
+  - Production environment templates
+- **Enhanced Security**: Added health check endpoint, production-ready error handling
+- **Database Migration**: Applied schema changes to PostgreSQL database successfully

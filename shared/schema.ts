@@ -80,6 +80,49 @@ export const milestones = pgTable("milestones", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+// Email drip campaign subscribers
+export const emailSubscribers = pgTable("email_subscribers", {
+  id: serial("id").primaryKey(),
+  email: text("email").notNull(),
+  firstName: text("first_name"),
+  lastName: text("last_name"),
+  subscriptionSource: text("subscription_source").notNull(), // 'quote_request', 'newsletter', 'contact_form'
+  isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// Email drip campaign sends tracking
+export const emailCampaignSends = pgTable("email_campaign_sends", {
+  id: serial("id").primaryKey(),
+  subscriberId: integer("subscriber_id").references(() => emailSubscribers.id).notNull(),
+  campaignType: text("campaign_type").notNull(), // 'welcome', 'day2_portfolio', 'day5_consultation'
+  emailSubject: text("email_subject").notNull(),
+  sentAt: timestamp("sent_at").defaultNow().notNull(),
+  isOpened: boolean("is_opened").default(false),
+  isClicked: boolean("is_clicked").default(false),
+});
+
+// Live chat messages
+export const chatMessages = pgTable("chat_messages", {
+  id: serial("id").primaryKey(),
+  sessionId: text("session_id").notNull(),
+  senderType: text("sender_type").notNull(), // 'visitor', 'admin'
+  senderName: text("sender_name"),
+  message: text("message").notNull(),
+  timestamp: timestamp("timestamp").defaultNow().notNull(),
+});
+
+// Chat sessions
+export const chatSessions = pgTable("chat_sessions", {
+  id: serial("id").primaryKey(),
+  sessionId: text("session_id").notNull(),
+  visitorEmail: text("visitor_email"),
+  visitorName: text("visitor_name"),
+  isActive: boolean("is_active").notNull().default(true),
+  startedAt: timestamp("started_at").defaultNow().notNull(),
+  endedAt: timestamp("ended_at"),
+});
+
 export const insertLeadSchema = createInsertSchema(leads).omit({
   id: true,
 });
@@ -111,6 +154,26 @@ export const insertMilestoneSchema = createInsertSchema(milestones).omit({
   createdAt: true,
 });
 
+export const insertEmailSubscriberSchema = createInsertSchema(emailSubscribers).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertEmailCampaignSendSchema = createInsertSchema(emailCampaignSends).omit({
+  id: true,
+  sentAt: true,
+});
+
+export const insertChatMessageSchema = createInsertSchema(chatMessages).omit({
+  id: true,
+  timestamp: true,
+});
+
+export const insertChatSessionSchema = createInsertSchema(chatSessions).omit({
+  id: true,
+  startedAt: true,
+});
+
 export type InsertLead = z.infer<typeof insertLeadSchema>;
 export type Lead = typeof leads.$inferSelect;
 
@@ -125,6 +188,18 @@ export type Estimate = typeof estimates.$inferSelect;
 
 export type InsertMessage = z.infer<typeof insertMessageSchema>;
 export type Message = typeof messages.$inferSelect;
+
+export type InsertEmailSubscriber = z.infer<typeof insertEmailSubscriberSchema>;
+export type EmailSubscriber = typeof emailSubscribers.$inferSelect;
+
+export type InsertEmailCampaignSend = z.infer<typeof insertEmailCampaignSendSchema>;
+export type EmailCampaignSend = typeof emailCampaignSends.$inferSelect;
+
+export type InsertChatMessage = z.infer<typeof insertChatMessageSchema>;
+export type ChatMessage = typeof chatMessages.$inferSelect;
+
+export type InsertChatSession = z.infer<typeof insertChatSessionSchema>;
+export type ChatSession = typeof chatSessions.$inferSelect;
 
 export type InsertProjectLog = z.infer<typeof insertProjectLogSchema>;
 export type ProjectLog = typeof projectLogs.$inferSelect;

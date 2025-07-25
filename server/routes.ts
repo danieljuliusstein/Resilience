@@ -12,8 +12,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const leadData = insertLeadSchema.parse(req.body);
       const lead = await storage.createLead(leadData);
       
-      // Send email notification
+      // Send email notification and schedule drip campaign
       await emailService.sendQuoteNotification(leadData);
+      
+      // Schedule email drip campaign
+      try {
+        const { scheduleEmailDripCampaign } = await import("./email-drip");
+        await scheduleEmailDripCampaign({
+          email: leadData.email,
+          firstName: leadData.firstName,
+          lastName: leadData.lastName,
+          subscriptionSource: 'quote_request'
+        });
+      } catch (error) {
+        console.error("Failed to schedule drip campaign:", error);
+      }
       
       res.json(lead);
     } catch (error) {
@@ -141,6 +154,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(messages);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch messages" });
+    }
+  });
+
+  // Test email endpoint
+  app.post("/api/test-email", async (req, res) => {
+    try {
+      console.log("Testing EmailOctopus integration...");
+      const result = await emailService.sendTestEmail();
+      
+      if (result) {
+        res.json({ success: true, message: "Test email sent successfully via EmailOctopus" });
+      } else {
+        res.status(500).json({ success: false, message: "Failed to send test email" });
+      }
+    } catch (error) {
+      console.error("Test email error:", error);
+      res.status(500).json({ success: false, message: "Error sending test email", error: error instanceof Error ? error.message : String(error) });
     }
   });
 

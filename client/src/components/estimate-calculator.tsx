@@ -180,7 +180,7 @@ export default function EstimateCalculator() {
                   {["Small (under 100 sq ft)", "Medium (100-300 sq ft)", "Large (300-500 sq ft)", "Extra Large (500+ sq ft)"].map((size) => (
                     <div key={size} className="flex items-center space-x-2">
                       <RadioGroupItem value={size} id={size} />
-                      <Label htmlFor={size} className="text-lg brand-dark cursor-pointer">{size}</Label>
+                      <Label htmlFor={size} className="text-lg text-gray-900 cursor-pointer">{size}</Label>
                     </div>
                   ))}
                 </RadioGroup>
@@ -203,7 +203,7 @@ export default function EstimateCalculator() {
                   {["Under $1,000", "$1,000 - $5,000", "$5,000 - $15,000", "$15,000 - $30,000", "Over $30,000"].map((budget) => (
                     <div key={budget} className="flex items-center space-x-2">
                       <RadioGroupItem value={budget} id={budget} />
-                      <Label htmlFor={budget} className="text-lg brand-dark cursor-pointer">{budget}</Label>
+                      <Label htmlFor={budget} className="text-lg text-gray-900 cursor-pointer">{budget}</Label>
                     </div>
                   ))}
                 </RadioGroup>
@@ -218,7 +218,7 @@ export default function EstimateCalculator() {
                 </h3>
                 <div className="space-y-4">
                   <div>
-                    <Label htmlFor="timeline" className="brand-gray">Preferred Timeline</Label>
+                    <Label htmlFor="timeline" className="text-gray-700 font-medium">Preferred Timeline</Label>
                     <RadioGroup
                       value={formData.timeline}
                       onValueChange={(value) =>
@@ -229,13 +229,13 @@ export default function EstimateCalculator() {
                       {["ASAP", "Within 1 month", "1-3 months", "3+ months", "Just planning"].map((timeline) => (
                         <div key={timeline} className="flex items-center space-x-2">
                           <RadioGroupItem value={timeline} id={timeline} />
-                          <Label htmlFor={timeline} className="brand-dark cursor-pointer">{timeline}</Label>
+                          <Label htmlFor={timeline} className="text-gray-900 cursor-pointer">{timeline}</Label>
                         </div>
                       ))}
                     </RadioGroup>
                   </div>
                   <div>
-                    <Label htmlFor="contactInfo" className="brand-gray">Email or Phone *</Label>
+                    <Label htmlFor="contactInfo" className="text-gray-700 font-medium">Email or Phone *</Label>
                     <Input
                       id="contactInfo"
                       value={formData.contactInfo}

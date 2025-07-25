@@ -1,6 +1,6 @@
 import type { InsertLead, InsertEstimate, InsertMessage } from "@shared/schema";
 
-// Email service for quote notifications
+// Email service for quote notifications using EmailOctopus
 export class EmailService {
   private readonly adminEmail = "danieljuliusstein@gmail.com";
   private readonly apiKey = process.env.EMAILOCTOPUS_API_KEY;
@@ -178,6 +178,42 @@ Resilience Solutions Website
       `.trim()
     };
   }
+
+  // Test email functionality
+  async sendTestEmail(): Promise<boolean> {
+    const testLead: InsertLead = {
+      firstName: "Test",
+      lastName: "User",
+      email: "test@example.com",
+      phone: "555-0123",
+      serviceType: "testing",
+      projectDetails: "This is a test email to verify EmailOctopus integration is working correctly.",
+      consent: true
+    };
+
+    console.log("Sending test email...");
+    return await this.sendQuoteNotification(testLead);
+  }
 }
 
 export const emailService = new EmailService();
+
+// Export function for drip campaigns
+export async function sendEmailOctopusEmail(emailData: {
+  to: string;
+  subject: string;
+  html?: string;
+  text?: string;
+}): Promise<boolean> {
+  const service = new EmailService();
+  // Use the public method instead
+  return await service.sendQuoteNotification({
+    email: emailData.to,
+    firstName: "Customer",
+    lastName: "",
+    phone: "",
+    consent: true,
+    serviceType: "Email Campaign",
+    projectDetails: `Subject: ${emailData.subject}\n\n${emailData.html || emailData.text || ""}`
+  });
+}

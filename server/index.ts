@@ -1,6 +1,7 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { registerAdminRoutes } from "./admin-routes";
+import { registerChatRoutes } from "./chat-routes";
 import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
@@ -40,6 +41,7 @@ app.use((req, res, next) => {
 (async () => {
   const server = await registerRoutes(app);
   registerAdminRoutes(app);
+  registerChatRoutes(app);
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
@@ -57,6 +59,15 @@ app.use((req, res, next) => {
   } else {
     serveStatic(app);
   }
+
+  // Health check endpoint for monitoring
+  app.get('/health', (req, res) => {
+    res.status(200).json({ 
+      status: 'healthy', 
+      timestamp: new Date().toISOString(),
+      uptime: process.uptime()
+    });
+  });
 
   // ALWAYS serve the app on the port specified in the environment variable PORT
   // Other ports are firewalled. Default to 5000 if not specified.

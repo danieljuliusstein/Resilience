@@ -71,6 +71,12 @@ export default function Navigation() {
             Reviews
           </button>
           <button
+            onClick={() => scrollToSection("resources")}
+            className="brand-navy hover:brand-orange transition-colors font-medium"
+          >
+            Resources
+          </button>
+          <button
             onClick={() => scrollToSection("contact")}
             className="brand-navy hover:brand-orange transition-colors font-medium"
           >
@@ -118,6 +124,12 @@ export default function Navigation() {
               className="block w-full text-left brand-navy hover:brand-orange transition-colors font-medium"
             >
               Reviews
+            </button>
+            <button
+              onClick={() => scrollToSection("resources")}
+              className="block w-full text-left brand-navy hover:brand-orange transition-colors font-medium"
+            >
+              Resources
             </button>
             <button
               onClick={() => scrollToSection("contact")}

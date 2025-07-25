@@ -5,7 +5,8 @@ import ProjectGallery from "@/components/project-gallery";
 import Testimonials from "@/components/testimonials";
 import EstimateCalculator from "@/components/estimate-calculator";
 import ContactForm from "@/components/contact-form";
-import ClientDashboard from "@/components/client-dashboard";
+import ClientResourceCenter from "@/components/client-resource-center";
+import LiveChat from "@/components/live-chat";
 import Footer from "@/components/footer";
 
 export default function Home() {
@@ -18,8 +19,9 @@ export default function Home() {
       <Testimonials />
       <EstimateCalculator />
       <ContactForm />
-      <ClientDashboard />
+      <ClientResourceCenter />
       <Footer />
+      <LiveChat />
     </div>
   );
 }

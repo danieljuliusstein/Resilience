@@ -6,6 +6,10 @@ import {
   messages,
   projectLogs,
   milestones,
+  emailSubscribers,
+  emailCampaignSends,
+  chatMessages,
+  chatSessions,
   type Lead, 
   type InsertLead,
   type Project,
@@ -19,10 +23,19 @@ import {
   type ProjectLog,
   type InsertProjectLog,
   type Milestone,
-  type InsertMilestone
+  type InsertMilestone,
+  type EmailSubscriber,
+  type InsertEmailSubscriber,
+  type EmailCampaignSend,
+  type InsertEmailCampaignSend,
+  type ChatMessage,
+  type InsertChatMessage,
+  type ChatSession,
+  type InsertChatSession
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, asc } from "drizzle-orm";
+import crypto from "crypto";
 
 export interface IStorage {
   // Lead management
@@ -72,6 +85,21 @@ export interface IStorage {
   // Magic links
   getProjectByMagicLink(magicLink: string): Promise<Project | undefined>;
   regenerateMagicLink(id: number): Promise<Project | undefined>;
+  
+  // Email subscribers and drip campaigns
+  createEmailSubscriber(subscriber: InsertEmailSubscriber): Promise<EmailSubscriber>;
+  getEmailSubscriber(id: number): Promise<EmailSubscriber | undefined>;
+  getEmailSubscribers(): Promise<EmailSubscriber[]>;
+  createEmailCampaignSend(send: InsertEmailCampaignSend): Promise<EmailCampaignSend>;
+  getEmailCampaignSends(subscriberId?: number): Promise<EmailCampaignSend[]>;
+  
+  // Chat functionality
+  createChatSession(session: InsertChatSession): Promise<ChatSession>;
+  getChatSessions(): Promise<ChatSession[]>;
+  getChatSession(sessionId: string): Promise<ChatSession | undefined>;
+  endChatSession(sessionId: string): Promise<ChatSession | undefined>;
+  createChatMessage(message: InsertChatMessage): Promise<ChatMessage>;
+  getChatMessages(sessionId: string): Promise<ChatMessage[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -182,14 +210,6 @@ export class DatabaseStorage implements IStorage {
     return project || undefined;
   }
 
-  async getProject(id: number): Promise<Project | undefined> {
-    const [project] = await db
-      .select()
-      .from(projects)
-      .where(eq(projects.id, id));
-    return project || undefined;
-  }
-
   async createProjectLog(insertProjectLog: InsertProjectLog): Promise<ProjectLog> {
     const [log] = await db
       .insert(projectLogs)
@@ -263,6 +283,91 @@ export class DatabaseStorage implements IStorage {
       .where(eq(projects.id, id))
       .returning();
     return project || undefined;
+  }
+  
+  // Email subscribers and drip campaigns
+  async createEmailSubscriber(insertSubscriber: InsertEmailSubscriber): Promise<EmailSubscriber> {
+    const [subscriber] = await db
+      .insert(emailSubscribers)
+      .values(insertSubscriber)
+      .returning();
+    return subscriber;
+  }
+
+  async getEmailSubscriber(id: number): Promise<EmailSubscriber | undefined> {
+    const [subscriber] = await db
+      .select()
+      .from(emailSubscribers)
+      .where(eq(emailSubscribers.id, id));
+    return subscriber || undefined;
+  }
+
+  async getEmailSubscribers(): Promise<EmailSubscriber[]> {
+    return await db.select().from(emailSubscribers);
+  }
+
+  async createEmailCampaignSend(insertSend: InsertEmailCampaignSend): Promise<EmailCampaignSend> {
+    const [send] = await db
+      .insert(emailCampaignSends)
+      .values(insertSend)
+      .returning();
+    return send;
+  }
+
+  async getEmailCampaignSends(subscriberId?: number): Promise<EmailCampaignSend[]> {
+    if (subscriberId) {
+      return await db.select().from(emailCampaignSends).where(eq(emailCampaignSends.subscriberId, subscriberId));
+    }
+    return await db.select().from(emailCampaignSends);
+  }
+  
+  // Chat functionality
+  async createChatSession(insertSession: InsertChatSession): Promise<ChatSession> {
+    const [session] = await db
+      .insert(chatSessions)
+      .values(insertSession)
+      .returning();
+    return session;
+  }
+
+  async getChatSessions(): Promise<ChatSession[]> {
+    return await db.select().from(chatSessions).orderBy(asc(chatSessions.startedAt));
+  }
+
+  async getChatSession(sessionId: string): Promise<ChatSession | undefined> {
+    const [session] = await db
+      .select()
+      .from(chatSessions)
+      .where(eq(chatSessions.sessionId, sessionId));
+    return session || undefined;
+  }
+
+  async endChatSession(sessionId: string): Promise<ChatSession | undefined> {
+    const [session] = await db
+      .update(chatSessions)
+      .set({ 
+        isActive: false,
+        endedAt: new Date()
+      })
+      .where(eq(chatSessions.sessionId, sessionId))
+      .returning();
+    return session || undefined;
+  }
+
+  async createChatMessage(insertMessage: InsertChatMessage): Promise<ChatMessage> {
+    const [message] = await db
+      .insert(chatMessages)
+      .values(insertMessage)
+      .returning();
+    return message;
+  }
+
+  async getChatMessages(sessionId: string): Promise<ChatMessage[]> {
+    return await db
+      .select()
+      .from(chatMessages) 
+      .where(eq(chatMessages.sessionId, sessionId))
+      .orderBy(asc(chatMessages.timestamp));
   }
 }
 
