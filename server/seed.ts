@@ -1,5 +1,6 @@
 import { db } from "./db";
 import { testimonials, projects } from "@shared/schema";
+import crypto from "crypto";
 
 async function seedDatabase() {
   console.log("Seeding database...");
@@ -30,12 +31,19 @@ async function seedDatabase() {
   const sampleProjects = [
     {
       clientName: "Smith Residence",
+      clientEmail: "smith@example.com",
+      clientPhone: "(555) 123-4567",
       projectType: "Kitchen Remodel",
       status: "in-progress",
       budget: 24500,
       progress: 75,
       projectManager: "Mike Rodriguez",
-      estimatedCompletion: "April 15, 2024"
+      estimatedCompletion: "April 15, 2024",
+      tags: ["🟢 On-Time"],
+      isOverdue: false,
+      address: "123 Oak Street",
+      notes: "Kitchen renovation with custom cabinets",
+      magicLink: crypto.randomUUID()
     }
   ];
 

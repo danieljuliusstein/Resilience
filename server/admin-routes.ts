@@ -87,7 +87,7 @@ export function registerAdminRoutes(app: Express) {
       
       // If project completed, set completedAt timestamp
       if (status === 'completed' && currentProject.status !== 'completed') {
-        await storage.updateProject(id, { completedAt: new Date() });
+        await storage.updateProjectTimestamps(id, { completedAt: new Date() });
       }
       
       // Log the status change

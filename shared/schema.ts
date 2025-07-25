@@ -129,6 +129,9 @@ export const insertLeadSchema = createInsertSchema(leads).omit({
 
 export const insertProjectSchema = createInsertSchema(projects).omit({
   id: true,
+  magicLink: true,
+  completedAt: true,
+  createdAt: true,
 });
 
 export const insertTestimonialSchema = createInsertSchema(testimonials).omit({

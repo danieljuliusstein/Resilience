@@ -63,6 +63,7 @@ export interface IStorage {
   
   // Project updates
   updateProject(id: number, updates: Partial<InsertProject>): Promise<Project | undefined>;
+  updateProjectTimestamps(id: number, updates: { completedAt?: Date | null }): Promise<Project | undefined>;
   getProject(id: number): Promise<Project | undefined>;
   
   // Project logs
@@ -148,7 +149,10 @@ export class MockStorage implements IStorage {
   async createLead(insertLead: InsertLead): Promise<Lead> {
     const lead: Lead = {
       id: this.idCounter++,
-      ...insertLead
+      ...insertLead,
+      serviceType: insertLead.serviceType || null,
+      projectDetails: insertLead.projectDetails || null,
+      consent: insertLead.consent || false
     };
     this.leads.push(lead);
     return lead;
@@ -162,6 +166,14 @@ export class MockStorage implements IStorage {
     const project: Project = {
       id: this.idCounter++,
       ...insertProject,
+      clientEmail: insertProject.clientEmail || null,
+      clientPhone: insertProject.clientPhone || null,
+      address: insertProject.address || null,
+      notes: insertProject.notes || null,
+      tags: insertProject.tags || [],
+      isOverdue: insertProject.isOverdue || false,
+      progress: insertProject.progress || 0,
+      status: insertProject.status || "consultation",
       magicLink: crypto.randomUUID(),
       completedAt: null,
       createdAt: new Date()
@@ -194,6 +206,16 @@ export class MockStorage implements IStorage {
     return project;
   }
 
+  async updateProjectTimestamps(id: number, updates: { completedAt?: Date | null }): Promise<Project | undefined> {
+    const project = this.projects.find(p => p.id === id);
+    if (project) {
+      if (updates.completedAt !== undefined) {
+        project.completedAt = updates.completedAt;
+      }
+    }
+    return project;
+  }
+
   async getTestimonials(): Promise<Testimonial[]> {
     return this.testimonials;
   }
@@ -201,7 +223,8 @@ export class MockStorage implements IStorage {
   async createTestimonial(insertTestimonial: InsertTestimonial): Promise<Testimonial> {
     const testimonial: Testimonial = {
       id: this.idCounter++,
-      ...insertTestimonial
+      ...insertTestimonial,
+      rating: insertTestimonial.rating || 5
     };
     this.testimonials.push(testimonial);
     return testimonial;
@@ -210,7 +233,11 @@ export class MockStorage implements IStorage {
   async createEstimate(insertEstimate: InsertEstimate): Promise<Estimate> {
     const estimate: Estimate = {
       id: this.idCounter++,
-      ...insertEstimate
+      ...insertEstimate,
+      roomSize: insertEstimate.roomSize || null,
+      budget: insertEstimate.budget || null,
+      timeline: insertEstimate.timeline || null,
+      estimatedCost: insertEstimate.estimatedCost || null
     };
     this.estimates.push(estimate);
     return estimate;
@@ -228,6 +255,7 @@ export class MockStorage implements IStorage {
     const message: Message = {
       id: this.idCounter++,
       ...insertMessage,
+      projectId: insertMessage.projectId || null,
       timestamp: new Date()
     };
     this.messages.push(message);
@@ -245,6 +273,8 @@ export class MockStorage implements IStorage {
     const projectLog: ProjectLog = {
       id: this.idCounter++,
       ...log,
+      details: log.details || null,
+      userId: log.userId || "admin",
       timestamp: new Date()
     };
     this.projectLogs.push(projectLog);
@@ -259,6 +289,10 @@ export class MockStorage implements IStorage {
     const newMilestone: Milestone = {
       id: this.idCounter++,
       ...milestone,
+      description: milestone.description || null,
+      dueDate: milestone.dueDate || null,
+      completedDate: milestone.completedDate || null,
+      isCompleted: milestone.isCompleted || false,
       createdAt: new Date()
     };
     this.milestones.push(newMilestone);
@@ -316,6 +350,9 @@ export class MockStorage implements IStorage {
     const emailSubscriber: EmailSubscriber = {
       id: this.idCounter++,
       ...subscriber,
+      firstName: subscriber.firstName || null,
+      lastName: subscriber.lastName || null,
+      isActive: subscriber.isActive !== undefined ? subscriber.isActive : true,
       createdAt: new Date()
     };
     this.emailSubscribers.push(emailSubscriber);
@@ -334,6 +371,8 @@ export class MockStorage implements IStorage {
     const campaignSend: EmailCampaignSend = {
       id: this.idCounter++,
       ...send,
+      isOpened: send.isOpened || null,
+      isClicked: send.isClicked || null,
       sentAt: new Date()
     };
     this.emailCampaignSends.push(campaignSend);
@@ -351,6 +390,9 @@ export class MockStorage implements IStorage {
     const chatSession: ChatSession = {
       id: this.idCounter++,
       ...session,
+      visitorEmail: session.visitorEmail || null,
+      visitorName: session.visitorName || null,
+      isActive: session.isActive !== undefined ? session.isActive : true,
       startedAt: new Date(),
       endedAt: null
     };
@@ -379,6 +421,7 @@ export class MockStorage implements IStorage {
     const chatMessage: ChatMessage = {
       id: this.idCounter++,
       ...message,
+      senderName: message.senderName || null,
       timestamp: new Date()
     };
     this.chatMessages.push(chatMessage);
@@ -436,6 +479,15 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateProject(id: number, updates: Partial<InsertProject>): Promise<Project | undefined> {
+    const [project] = await db
+      .update(projects)
+      .set(updates)
+      .where(eq(projects.id, id))
+      .returning();
+    return project || undefined;
+  }
+
+  async updateProjectTimestamps(id: number, updates: { completedAt?: Date | null }): Promise<Project | undefined> {
     const [project] = await db
       .update(projects)
       .set(updates)
@@ -705,6 +757,10 @@ export const storage = {
   async updateProject(id: number, updates: Partial<InsertProject>): Promise<Project | undefined> {
     const store = await getStorage();
     return store.updateProject(id, updates);
+  },
+  async updateProjectTimestamps(id: number, updates: { completedAt?: Date | null }): Promise<Project | undefined> {
+    const store = await getStorage();
+    return store.updateProjectTimestamps(id, updates);
   },
   async getTestimonials(): Promise<Testimonial[]> {
     const store = await getStorage();
