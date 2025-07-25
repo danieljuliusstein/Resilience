@@ -143,8 +143,7 @@ export default function AdminPanel() {
         tags: [],
         isOverdue: false,
         address: "",
-        notes: "",
-        magicLink: ""
+        notes: ""
       });
       setSelectedTags([]);
       setShowCreateForm(false);
