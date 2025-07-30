@@ -134,8 +134,8 @@ export default function Testimonials() {
           <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex">
               {testimonials?.map((testimonial) => (
-                <div key={testimonial.id} className="flex-none w-full md:w-1/2 lg:w-1/3 pl-4 pr-4">
-                  <Card className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 h-full group">
+                <div key={testimonial.id} className="flex-none w-full md:w-1/2 lg:w-1/3 px-6">
+                  <Card className="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 h-full group mx-2">
                     <CardContent className="p-8 relative h-full flex flex-col">
                       {/* Quote Icon */}
                       <div className="absolute top-6 right-6 opacity-10 group-hover:opacity-20 transition-opacity">
