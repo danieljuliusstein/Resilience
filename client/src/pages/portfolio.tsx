@@ -3,11 +3,12 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { OptimizedImage } from "@/components/ui/optimized-image";
 import { ArrowLeft, MapPin, Calendar, DollarSign, User, Star, Quote, X, ChevronLeft, ChevronRight, Eye } from "lucide-react";
 import { useLocation } from "wouter";
 import type { Project, Testimonial } from "@shared/schema";
 
-// Portfolio project data with images
+// Portfolio project data with optimized images
 const portfolioProjects = [
   {
     id: 1,
@@ -16,13 +17,13 @@ const portfolioProjects = [
     location: "Johnson Family Home, Chicago",
     timeline: "6 weeks",
     description: "Complete kitchen renovation featuring custom cabinetry, quartz countertops, and modern appliances with smart home integration.",
-    beforeImage: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&h=600&fit=crop&crop=center",
-    afterImage: "https://images.unsplash.com/photo-1556909263-4e6b1b9cfa59?w=800&h=600&fit=crop&crop=center",
+    beforeImage: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?w=800&h=600&fit=crop&crop=center&q=80",
+    afterImage: "https://images.unsplash.com/photo-1556909263-4e6b1b9cfa59?w=800&h=600&fit=crop&crop=center&q=80",
     gallery: [
-      "https://images.unsplash.com/photo-1556909114-8b9cd5c1e5e4?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1556909263-19c5fe7c4e4d?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1556909114-ca5d25c08c62?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1556908153-14ce2dd8e413?w=800&h=600&fit=crop&crop=center"
+      "https://images.unsplash.com/photo-1556909114-8b9cd5c1e5e4?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1556909263-19c5fe7c4e4d?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1556909114-ca5d25c08c62?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1556908153-14ce2dd8e413?w=800&h=600&fit=crop&crop=center&q=80"
     ]
   },
   {
@@ -32,13 +33,13 @@ const portfolioProjects = [
     location: "Wilson Residence, Seattle",
     timeline: "4 weeks",
     description: "Spa-like bathroom with walk-in shower, freestanding tub, and premium finishes including heated floors.",
-    beforeImage: "https://images.unsplash.com/photo-1620626011761-996317b8d101?w=800&h=600&fit=crop&crop=center",
-    afterImage: "https://images.unsplash.com/photo-1620626011805-8b6ea9c1e4ed?w=800&h=600&fit=crop&crop=center",
+    beforeImage: "https://images.unsplash.com/photo-1620626011761-996317b8d101?w=800&h=600&fit=crop&crop=center&q=80",
+    afterImage: "https://images.unsplash.com/photo-1620626011805-8b6ea9c1e4ed?w=800&h=600&fit=crop&crop=center&q=80",
     gallery: [
-      "https://images.unsplash.com/photo-1620626011761-996317b8d101?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1620626011805-8b6ea9c1e4ed?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=800&h=600&fit=crop&crop=center"
+      "https://images.unsplash.com/photo-1620626011761-996317b8d101?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1620626011805-8b6ea9c1e4ed?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=800&h=600&fit=crop&crop=center&q=80"
     ]
   },
   {
@@ -48,13 +49,13 @@ const portfolioProjects = [
     location: "Martinez Family, Denver",
     timeline: "12 weeks",
     description: "Removed walls to create flowing open concept design with vaulted ceilings and natural light throughout.",
-    beforeImage: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop&crop=center",
-    afterImage: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&h=600&fit=crop&crop=center",
+    beforeImage: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop&crop=center&q=80",
+    afterImage: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&h=600&fit=crop&crop=center&q=80",
     gallery: [
-      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1556020685-ae41abfc9365?w=800&h=600&fit=crop&crop=center"
+      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1556020685-ae41abfc9365?w=800&h=600&fit=crop&crop=center&q=80"
     ]
   },
   {
@@ -64,13 +65,13 @@ const portfolioProjects = [
     location: "Davis Family, Portland",
     timeline: "8 weeks",
     description: "Transformed unfinished basement into entertainment space with bar, theater area, and guest room.",
-    beforeImage: "https://images.unsplash.com/photo-1582582621439-8e139b77cf8d?w=800&h=600&fit=crop&crop=center",
-    afterImage: "https://images.unsplash.com/photo-1582582621542-4e45b7c9e5e4?w=800&h=600&fit=crop&crop=center",
+    beforeImage: "https://images.unsplash.com/photo-1582582621439-8e139b77cf8d?w=800&h=600&fit=crop&crop=center&q=80",
+    afterImage: "https://images.unsplash.com/photo-1582582621542-4e45b7c9e5e4?w=800&h=600&fit=crop&crop=center&q=80",
     gallery: [
-      "https://images.unsplash.com/photo-1582582621439-8e139b77cf8d?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1582582621542-4e45b7c9e5e4?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1560448075-bb485b067938?w=800&h=600&fit=crop&crop=center"
+      "https://images.unsplash.com/photo-1582582621439-8e139b77cf8d?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1582582621542-4e45b7c9e5e4?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1560448075-bb485b067938?w=800&h=600&fit=crop&crop=center&q=80"
     ]
   },
   {
@@ -80,13 +81,13 @@ const portfolioProjects = [
     location: "Thompson Residence, Austin",
     timeline: "5 weeks", 
     description: "Custom deck with built-in seating, outdoor kitchen, and landscape integration for year-round entertaining.",
-    beforeImage: "https://images.unsplash.com/photo-1600298881974-6be191ceeda1?w=800&h=600&fit=crop&crop=center",
-    afterImage: "https://images.unsplash.com/photo-1600298882163-c03e3bb27ed3?w=800&h=600&fit=crop&crop=center",
+    beforeImage: "https://images.unsplash.com/photo-1600298881974-6be191ceeda1?w=800&h=600&fit=crop&crop=center&q=80",
+    afterImage: "https://images.unsplash.com/photo-1600298882163-c03e3bb27ed3?w=800&h=600&fit=crop&crop=center&q=80",
     gallery: [
-      "https://images.unsplash.com/photo-1600298881974-6be191ceeda1?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1600298882163-c03e3bb27ed3?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?w=800&h=600&fit=crop&crop=center"
+      "https://images.unsplash.com/photo-1600298881974-6be191ceeda1?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1600298882163-c03e3bb27ed3?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?w=800&h=600&fit=crop&crop=center&q=80"
     ]
   },
   {
@@ -96,13 +97,13 @@ const portfolioProjects = [
     location: "Chen Family, San Francisco",
     timeline: "16 weeks",
     description: "Historic home restoration preserving original character while adding modern conveniences and energy efficiency.",
-    beforeImage: "https://images.unsplash.com/photo-1613977257363-707ba9348227?w=800&h=600&fit=crop&crop=center",
-    afterImage: "https://images.unsplash.com/photo-1613977257454-0a99bd4d7b7e?w=800&h=600&fit=crop&crop=center",
+    beforeImage: "https://images.unsplash.com/photo-1613977257363-707ba9348227?w=800&h=600&fit=crop&crop=center&q=80",
+    afterImage: "https://images.unsplash.com/photo-1613977257454-0a99bd4d7b7e?w=800&h=600&fit=crop&crop=center&q=80",
     gallery: [
-      "https://images.unsplash.com/photo-1613977257363-707ba9348227?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1613977257454-0a99bd4d7b7e?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=600&fit=crop&crop=center"
+      "https://images.unsplash.com/photo-1613977257363-707ba9348227?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1613977257454-0a99bd4d7b7e?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=600&fit=crop&crop=center&q=80"
     ]
   },
   {
@@ -112,13 +113,13 @@ const portfolioProjects = [
     location: "Rodriguez Family, Miami",
     timeline: "10 weeks",
     description: "Added detached guest suite with kitchenette, full bathroom, and private entrance for visiting family.",
-    beforeImage: "https://images.unsplash.com/photo-1560448075-bb485b067938?w=800&h=600&fit=crop&crop=center",
-    afterImage: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=600&fit=crop&crop=center",
+    beforeImage: "https://images.unsplash.com/photo-1560448075-bb485b067938?w=800&h=600&fit=crop&crop=center&q=80",
+    afterImage: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=600&fit=crop&crop=center&q=80",
     gallery: [
-      "https://images.unsplash.com/photo-1560448075-bb485b067938?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1556020685-ae41abfc9365?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&h=600&fit=crop&crop=center"
+      "https://images.unsplash.com/photo-1560448075-bb485b067938?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1556020685-ae41abfc9365?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&h=600&fit=crop&crop=center&q=80"
     ]
   },
   {
@@ -128,13 +129,13 @@ const portfolioProjects = [
     location: "Anderson Farm, Nashville",
     timeline: "7 weeks",
     description: "Farmhouse-style kitchen renovation with custom barn wood cabinets, farmhouse sink, and vintage lighting.",
-    beforeImage: "https://images.unsplash.com/photo-1556909263-4e6b1b9cfa59?w=800&h=600&fit=crop&crop=center",
-    afterImage: "https://images.unsplash.com/photo-1556908153-14ce2dd8e413?w=800&h=600&fit=crop&crop=center",
+    beforeImage: "https://images.unsplash.com/photo-1556909263-4e6b1b9cfa59?w=800&h=600&fit=crop&crop=center&q=80",
+    afterImage: "https://images.unsplash.com/photo-1556908153-14ce2dd8e413?w=800&h=600&fit=crop&crop=center&q=80",
     gallery: [
-      "https://images.unsplash.com/photo-1556909263-4e6b1b9cfa59?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1556908153-14ce2dd8e413?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1556909114-8b9cd5c1e5e4?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1556909263-19c5fe7c4e4d?w=800&h=600&fit=crop&crop=center"
+      "https://images.unsplash.com/photo-1556909263-4e6b1b9cfa59?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1556908153-14ce2dd8e413?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1556909114-8b9cd5c1e5e4?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1556909263-19c5fe7c4e4d?w=800&h=600&fit=crop&crop=center&q=80"
     ]
   },
   {
@@ -144,13 +145,13 @@ const portfolioProjects = [
     location: "Kim Residence, Los Angeles",
     timeline: "3 weeks",
     description: "Small powder room makeover with dramatic wallpaper, floating vanity, and statement lighting.",
-    beforeImage: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&h=600&fit=crop&crop=center",
-    afterImage: "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=800&h=600&fit=crop&crop=center",
+    beforeImage: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&h=600&fit=crop&crop=center&q=80",
+    afterImage: "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=800&h=600&fit=crop&crop=center&q=80",
     gallery: [
-      "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1620626011761-996317b8d101?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1620626011805-8b6ea9c1e4ed?w=800&h=600&fit=crop&crop=center"
+      "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1620626011761-996317b8d101?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1620626011805-8b6ea9c1e4ed?w=800&h=600&fit=crop&crop=center&q=80"
     ]
   },
   {
@@ -160,13 +161,13 @@ const portfolioProjects = [
     location: "Taylor Home, Boston",
     timeline: "6 weeks",
     description: "Converted spare bedroom into elegant home office with built-in bookcases and reading nook.",
-    beforeImage: "https://images.unsplash.com/photo-1556020685-ae41abfc9365?w=800&h=600&fit=crop&crop=center",
-    afterImage: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&h=600&fit=crop&crop=center",
+    beforeImage: "https://images.unsplash.com/photo-1556020685-ae41abfc9365?w=800&h=600&fit=crop&crop=center&q=80",
+    afterImage: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&h=600&fit=crop&crop=center&q=80",
     gallery: [
-      "https://images.unsplash.com/photo-1556020685-ae41abfc9365?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1560448075-bb485b067938?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=600&fit=crop&crop=center"
+      "https://images.unsplash.com/photo-1556020685-ae41abfc9365?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1560448075-bb485b067938?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=600&fit=crop&crop=center&q=80"
     ]
   },
   {
@@ -176,13 +177,13 @@ const portfolioProjects = [
     location: "Parker Estate, Phoenix",
     timeline: "4 weeks",
     description: "Master bedroom closet conversion with custom shelving, island seating, and LED lighting system.",
-    beforeImage: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop&crop=center",
-    afterImage: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=600&fit=crop&crop=center",
+    beforeImage: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop&crop=center&q=80",
+    afterImage: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=600&fit=crop&crop=center&q=80",
     gallery: [
-      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1560448075-bb485b067938?w=800&h=600&fit=crop&crop=center"
+      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1560448075-bb485b067938?w=800&h=600&fit=crop&crop=center&q=80"
     ]
   },
   {
@@ -192,13 +193,13 @@ const portfolioProjects = [
     location: "Williams Estate, San Diego",
     timeline: "14 weeks",
     description: "Custom pool house with outdoor bar, changing rooms, and entertainment area overlooking the pool.",
-    beforeImage: "https://images.unsplash.com/photo-1600298881974-6be191ceeda1?w=800&h=600&fit=crop&crop=center",
-    afterImage: "https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?w=800&h=600&fit=crop&crop=center",
+    beforeImage: "https://images.unsplash.com/photo-1600298881974-6be191ceeda1?w=800&h=600&fit=crop&crop=center&q=80",
+    afterImage: "https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?w=800&h=600&fit=crop&crop=center&q=80",
     gallery: [
-      "https://images.unsplash.com/photo-1600298881974-6be191ceeda1?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1600298882163-c03e3bb27ed3?w=800&h=600&fit=crop&crop=center",
-      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=600&fit=crop&crop=center"
+      "https://images.unsplash.com/photo-1600298881974-6be191ceeda1?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1600607687644-aac4c3eac7f4?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1600298882163-c03e3bb27ed3?w=800&h=600&fit=crop&crop=center&q=80",
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=600&fit=crop&crop=center&q=80"
     ]
   }
 ];
@@ -361,11 +362,13 @@ export default function Portfolio() {
             {filteredProjects.map((project, index) => (
               <Card key={project.id} className="group hover:shadow-2xl transition-all duration-500 border border-gray-100 hover:border-brand-orange/30 overflow-hidden bg-white rounded-2xl">
                 <div className="relative h-72 overflow-hidden">
-                  <img
+                  <OptimizedImage
                     src={project.afterImage}
                     alt={project.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     loading={index < 6 ? "eager" : "lazy"}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 33vw"
+                    priority={index < 6}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
                   
@@ -521,10 +524,12 @@ export default function Portfolio() {
               </Button>
               
               <div className="relative bg-white/5 backdrop-blur-sm rounded-2xl overflow-hidden border border-white/10">
-                <img
+                <OptimizedImage
                   src={getCurrentImage()}
                   alt={`${selectedProject.title} - ${getImageLabel()}`}
                   className="w-full max-h-[75vh] object-contain"
+                  priority={true}
+                  loading="eager"
                 />
                 
                 {/* Enhanced Navigation Arrows */}
