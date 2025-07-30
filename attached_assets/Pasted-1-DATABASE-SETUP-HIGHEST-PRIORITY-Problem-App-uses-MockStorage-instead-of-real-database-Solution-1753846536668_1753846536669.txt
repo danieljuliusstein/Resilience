@@ -1,0 +1,102 @@
+1. DATABASE SETUP (HIGHEST PRIORITY)
+Problem: App uses MockStorage instead of real database Solution Steps:
+
+In Replit project, go to Tools panel → Database → Add PostgreSQL
+Verify DATABASE_URL environment variable is automatically set
+Run npm run db:push to create database tables
+Test database connection by checking logs for "Database connection successful, using DatabaseStorage"
+Alternative if Replit DB fails:
+
+Go to Secrets tab (lock icon)
+Add DATABASE_URL with format: postgresql://username:password@hostname:port/database
+2. EMAIL SERVICE CONFIGURATION (HIGH PRIORITY)
+Problem: Email notifications only log to console, conflicting email services Current State: Code uses EmailOctopus API but SendGrid package is installed
+
+Choose ONE approach:
+
+Option A - Use EmailOctopus (Recommended - code already implemented):
+
+Add to Secrets: EMAILOCTOPUS_API_KEY=your_api_key_here
+Remove unused SendGrid dependency: npm uninstall @sendgrid/mail
+Option B - Switch to SendGrid:
+
+Add to Secrets: SENDGRID_API_KEY=your_api_key_here
+Modify server/email.ts to use SendGrid instead of EmailOctopus
+Import and implement @sendgrid/mail package
+3. ENVIRONMENT VARIABLES SETUP (HIGH PRIORITY)
+Add these to Replit Secrets:
+
+SESSION_SECRET=generate_a_very_long_random_string_at_least_32_characters_long
+ADMIN_EMAIL=your_admin_email@domain.com
+FROM_EMAIL=noreply@yourdomain.com
+EMAILOCTOPUS_API_KEY=your_api_key (if using EmailOctopus)
+4. SECURITY PATCHES (MEDIUM PRIORITY)
+Problem: 11 npm vulnerabilities (8 moderate, 3 low) Solution:
+
+npm audit fix
+# If that doesn't fix all issues:
+npm audit fix --force
+5. BUILD OPTIMIZATIONS (LOW PRIORITY)
+Problems: Large bundle size, outdated browser data Solutions:
+
+npx update-browserslist-db@latest
+Consider implementing code splitting in vite.config.ts for bundle size.
+
+Verification Steps
+After Database Setup:
+Check server logs for "Database connection successful, using DatabaseStorage"
+Visit /database route - should show admin interface with real data
+Test creating a lead through contact form - should save to database
+After Email Setup:
+Test email endpoint: POST /api/test-email
+Check logs - should show actual email sending, not console fallback
+Submit contact form - admin should receive email notification
+After Environment Variables:
+Check that session management works properly
+Verify admin email receives notifications
+Test all form submissions end-to-end
+Important Notes
+What's Already Working:
+✅ All dependencies installed and working
+✅ Frontend builds successfully
+✅ Server starts and responds
+✅ TypeScript compilation passes
+✅ All imports and path aliases resolve
+✅ MockStorage provides fallback functionality
+File Locations:
+Database config: server/db.ts, drizzle.config.ts
+Email service: server/email.ts, server/email-drip.ts
+Environment variables: Use Replit Secrets tab
+Database setup docs: DATABASE_SETUP.md
+Testing Commands:
+# Check dependencies
+npm list --depth=0
+
+# Test TypeScript compilation
+npm run check
+
+# Build for production
+npm run build
+
+# Start development server
+npm run dev
+
+# Test database schema
+npm run db:push
+Common Pitfalls:
+Don't modify the MockStorage fallback system - it's working correctly
+Don't change path aliases - they're properly configured
+Don't install additional dependencies unless specifically needed
+The app is designed to gracefully degrade when services are unavailable
+Success Criteria
+Database connection established and MockStorage → DatabaseStorage switch occurs
+Email notifications send successfully (not just console logs)
+All environment variables properly configured
+No security vulnerabilities remain
+Application fully functional for production use
+If You Encounter Issues:
+Check server logs for specific error messages
+Verify environment variables are set in Replit Secrets
+Test each component individually (database, email, etc.)
+Use the health check endpoint: GET /health
+The application is designed to be resilient - it should continue working even if some services fail
