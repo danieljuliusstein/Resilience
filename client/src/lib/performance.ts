@@ -274,7 +274,7 @@ class PerformanceMonitor {
   public exportMetrics(): any {
     const metricsArray = Array.from(this.metrics.entries()).map(([metricId, metric]) => ({
       id: metricId,
-      ...metric
+      
     }));
     
     return {

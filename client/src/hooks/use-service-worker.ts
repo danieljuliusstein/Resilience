@@ -90,12 +90,15 @@ export function useServiceWorker() {
         resolve(event.data);
       };
       
-      if (state.registration.active) {
-        state.registration.active.postMessage(
+      const registration = state.registration;
+      if (registration && registration.active) {
+        registration.active.postMessage(
           { type: 'GET_CACHE_INFO' }, 
           [messageChannel.port2]
         );
       }
+
+
     });
   };
 
