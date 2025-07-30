@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { OptimizedImage } from "@/components/ui/optimized-image";
 import { Images } from "lucide-react";
 import { useLocation } from "wouter";
 
 const galleryImages = [
   {
     id: 1,
-    src: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+    src: "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600&q=80",
     alt: "Modern kitchen renovation",
     title: "Modern Kitchen Remodel",
     description: "Complete transformation with custom cabinets",
@@ -14,7 +15,7 @@ const galleryImages = [
   },
   {
     id: 2,
-    src: "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+    src: "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600&q=80",
     alt: "Luxury bathroom renovation",
     title: "Spa-Style Bathroom",
     description: "Luxury finishes and modern fixtures",
@@ -22,7 +23,7 @@ const galleryImages = [
   },
   {
     id: 3,
-    src: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+    src: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600&q=80",
     alt: "Contemporary living room design",
     title: "Living Room Makeover",
     description: "Custom accent wall and lighting design",
@@ -30,7 +31,7 @@ const galleryImages = [
   },
   {
     id: 4,
-    src: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+    src: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600&q=80",
     alt: "Home exterior painting project",
     title: "Exterior Transformation",
     description: "Professional painting and landscaping",
@@ -38,7 +39,7 @@ const galleryImages = [
   },
   {
     id: 5,
-    src: "https://images.unsplash.com/photo-1631889993959-41b4e9c6e3c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+    src: "https://images.unsplash.com/photo-1631889993959-41b4e9c6e3c5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600&q=80",
     alt: "Master bedroom renovation",
     title: "Master Bedroom Suite",
     description: "Complete bedroom and closet renovation",
@@ -46,7 +47,7 @@ const galleryImages = [
   },
   {
     id: 6,
-    src: "https://images.unsplash.com/photo-1543138203-e3353322149e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600",
+    src: "https://images.unsplash.com/photo-1543138203-e3353322149e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600&q=80",
     alt: "Chef's kitchen renovation",
     title: "Chef's Kitchen",
     description: "Professional-grade appliances and custom island",
@@ -102,15 +103,18 @@ export default function ProjectGallery() {
 
         {/* Project Gallery Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 project-gallery">
-          {filteredImages.map((image) => (
+          {filteredImages.map((image, index) => (
             <div
               key={image.id}
               className="relative overflow-hidden rounded-2xl shadow-lg group"
             >
-              <img
+              <OptimizedImage
                 src={image.src}
                 alt={image.alt}
                 className="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"
+                loading={index < 3 ? "eager" : "lazy"}
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                priority={index < 3}
               />
               <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 flex items-center justify-center">
                 <div className="text-white text-center opacity-0 group-hover:opacity-100 transition-opacity p-4">

@@ -14,14 +14,22 @@ export default function HeroSection() {
       id="home"
       className="relative h-screen flex items-center justify-center"
     >
-      {/* Background Image */}
+      {/* Optimized Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
         style={{
           backgroundImage:
-            "url('https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1920&h=1080')",
+            "url('https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080&q=80')",
         }}
       />
+      
+      {/* Preload critical background image */}
+      <link
+        rel="preload"
+        as="image"
+        href="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080&q=80"
+      />
+      
       <div className="absolute inset-0 hero-overlay" />
 
       <div className="relative z-10 text-center text-white px-6 max-w-4xl mx-auto animate-fade-in">
