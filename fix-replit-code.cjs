@@ -1,4 +1,9 @@
-import { defineConfig } from "vite";
+// fix-replit-code.js
+const fs = require('fs');
+const path = require('path');
+
+// Overwrite vite.config.ts with a generic alias setup
+const viteConfig = `import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 
@@ -16,4 +21,7 @@ export default defineConfig({
     outDir: path.resolve(__dirname, "dist/public"),
     emptyOutDir: true,
   },
-});
+});`;
+
+fs.writeFileSync('vite.config.ts', viteConfig);
+console.log('✅ Fixed vite.config.ts');
