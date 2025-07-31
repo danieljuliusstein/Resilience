@@ -3,6 +3,19 @@ import { registerRoutes } from "./routes";
 import { registerAdminRoutes } from "./admin-routes";
 import { registerChatRoutes } from "./chat-routes";
 import { setupVite, serveStatic, log } from "./vite";
+import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { createServer } from 'http'; // or express()
+
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  if (req.url?.startsWith('/admin')) {
+    // Route to admin-logic
+    res.status(200).send('<h1>Admin Panel</h1>');
+  } else if (req.url?.startsWith('/api')) {
+    res.status(200).json({ ok: true });
+  } else {
+    res.status(404).send('Not found');
+  }
+}
 
 const app = express();
 app.use(express.json());
