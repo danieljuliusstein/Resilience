@@ -14,6 +14,6 @@
   "routes": [
     { "src": "/api(?:/.*)?",   "dest": "server/index.ts" },
     { "src": "/admin(?:/.*)?", "dest": "server/index.ts" },
-    { "src": "/(.*)",          "dest": "dist/public/$1" }
+    { "src": "/(.*)",          "dest": "server/index.ts" }
   ]
 }

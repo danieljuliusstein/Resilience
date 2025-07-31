@@ -5,6 +5,11 @@ import { registerChatRoutes } from "./chat-routes";
 import { setupVite, serveStatic, log } from "./vite";
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { createServer } from 'http';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Create Express app instance
 const app = express();
@@ -82,14 +87,70 @@ async function initializeApp() {
 
 // Vercel serverless function handler
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  await initializeApp();
-  
-  // Convert Vercel request to Express request
-  const expressReq = req as any;
-  const expressRes = res as any;
-  
-  // Handle the request through Express
-  app(expressReq, expressRes);
+  try {
+    await initializeApp();
+    
+    // Handle API routes
+    if (req.url?.startsWith('/api')) {
+      // Let Express handle API routes
+      const expressReq = req as any;
+      const expressRes = res as any;
+      app(expressReq, expressRes);
+      return;
+    }
+    
+    // Handle admin route - serve the React app
+    if (req.url?.startsWith('/admin')) {
+      const indexPath = path.resolve(__dirname, '..', 'dist', 'public', 'index.html');
+      if (fs.existsSync(indexPath)) {
+        const html = fs.readFileSync(indexPath, 'utf-8');
+        res.setHeader('Content-Type', 'text/html');
+        res.status(200).send(html);
+      } else {
+        res.status(404).send('Admin page not found');
+      }
+      return;
+    }
+    
+    // Handle static files
+    const url = req.url || '/';
+    const filePath = path.resolve(__dirname, '..', 'dist', 'public', url === '/' ? 'index.html' : url);
+    
+    if (fs.existsSync(filePath) && !fs.statSync(filePath).isDirectory()) {
+      const ext = path.extname(filePath);
+      const contentType = {
+        '.html': 'text/html',
+        '.js': 'application/javascript',
+        '.css': 'text/css',
+        '.json': 'application/json',
+        '.png': 'image/png',
+        '.jpg': 'image/jpeg',
+        '.gif': 'image/gif',
+        '.svg': 'image/svg+xml',
+        '.ico': 'image/x-icon',
+        '.woff': 'font/woff',
+        '.woff2': 'font/woff2',
+        '.ttf': 'font/ttf',
+        '.eot': 'application/vnd.ms-fontobject'
+      }[ext] || 'application/octet-stream';
+      
+      res.setHeader('Content-Type', contentType);
+      res.status(200).send(fs.readFileSync(filePath));
+    } else {
+      // Fallback to index.html for client-side routing
+      const indexPath = path.resolve(__dirname, '..', 'dist', 'public', 'index.html');
+      if (fs.existsSync(indexPath)) {
+        const html = fs.readFileSync(indexPath, 'utf-8');
+        res.setHeader('Content-Type', 'text/html');
+        res.status(200).send(html);
+      } else {
+        res.status(404).send('Not found');
+      }
+    }
+  } catch (error) {
+    console.error('Vercel handler error:', error);
+    res.status(500).json({ error: 'Internal server error', message: error.message });
+  }
 }
 
 // Local development server startup
