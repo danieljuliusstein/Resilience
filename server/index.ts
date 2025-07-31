@@ -4,23 +4,14 @@ import { registerAdminRoutes } from "./admin-routes";
 import { registerChatRoutes } from "./chat-routes";
 import { setupVite, serveStatic, log } from "./vite";
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { createServer } from 'http'; // or express()
+import { createServer } from 'http';
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
-  if (req.url?.startsWith('/admin')) {
-    // Route to admin-logic
-    res.status(200).send('<h1>Admin Panel</h1>');
-  } else if (req.url?.startsWith('/api')) {
-    res.status(200).json({ ok: true });
-  } else {
-    res.status(404).send('Not found');
-  }
-}
-
+// Create Express app instance
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Middleware for logging
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
@@ -51,7 +42,11 @@ app.use((req, res, next) => {
   next();
 });
 
-(async () => {
+// Initialize app for both Vercel and local development
+let isInitialized = false;
+async function initializeApp() {
+  if (isInitialized) return;
+  
   const server = await registerRoutes(app);
   registerAdminRoutes(app);
   registerChatRoutes(app);
@@ -82,16 +77,39 @@ app.use((req, res, next) => {
     });
   });
 
-  // ALWAYS serve the app on the port specified in the environment variable PORT
-  // Other ports are firewalled. Default to 5000 if not specified.
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
-  const port = parseInt(process.env.PORT || '5000', 10);
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    log(`serving on port ${port}`);
-  });
-})();
+  isInitialized = true;
+}
+
+// Vercel serverless function handler
+export default async function handler(req: VercelRequest, res: VercelResponse) {
+  await initializeApp();
+  
+  // Convert Vercel request to Express request
+  const expressReq = req as any;
+  const expressRes = res as any;
+  
+  // Handle the request through Express
+  app(expressReq, expressRes);
+}
+
+// Local development server startup
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  (async () => {
+    await initializeApp();
+    
+    const server = createServer(app);
+    
+    // ALWAYS serve the app on the port specified in the environment variable PORT
+    // Other ports are firewalled. Default to 5000 if not specified.
+    // this serves both the API and the client.
+    // It is the only port that is not firewalled.
+    const port = parseInt(process.env.PORT || '5000', 10);
+    server.listen({
+      port,
+      host: "0.0.0.0",
+      reusePort: true,
+    }, () => {
+      log(`serving on port ${port}`);
+    });
+  })();
+}
