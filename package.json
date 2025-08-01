@@ -5,10 +5,17 @@
   "license": "MIT",
   "scripts": {
     "dev": "NODE_ENV=development tsx server/index.ts",
+    "dev:cf": "wrangler pages dev dist --compatibility-date=2024-01-15 --d1=DB",
     "build": "vite build && esbuild server/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
+    "build:cf": "vite build",
+    "build:functions": "esbuild functions/api/**/*.ts --platform=neutral --format=esm --outdir=functions --bundle --external:@cloudflare/workers-types",
     "start": "NODE_ENV=production node dist/index.js",
+    "preview": "wrangler pages dev dist",
+    "deploy": "wrangler pages deploy dist",
     "check": "tsc",
-    "db:push": "drizzle-kit push"
+    "db:push": "drizzle-kit push",
+    "db:create": "wrangler d1 create resilience-solutions-prod",
+    "db:migrate": "wrangler d1 execute resilience-solutions-prod --file=./migrations/schema.sql"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -78,6 +85,7 @@
     "zod-validation-error": "^3.4.0"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^4.20240925.0",
     "@replit/vite-plugin-cartographer": "^0.2.7",
     "@replit/vite-plugin-runtime-error-modal": "^0.0.3",
     "@tailwindcss/typography": "^0.5.15",
@@ -99,7 +107,8 @@
     "tailwindcss": "^3.4.17",
     "tsx": "^4.19.1",
     "typescript": "5.6.3",
-    "vite": "^5.4.19"
+    "vite": "^5.4.19",
+    "wrangler": "^3.78.0"
   },
   "optionalDependencies": {
     "bufferutil": "^4.0.8"
