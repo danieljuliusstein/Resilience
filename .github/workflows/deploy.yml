@@ -1,0 +1,87 @@
+name: Deploy to Cloudflare Pages
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    name: Deploy to Cloudflare Pages
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run type check
+        run: npm run check
+
+      - name: Build application
+        run: npm run build:cf
+        env:
+          NODE_ENV: production
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: resilience-solutions
+          directory: dist
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          wranglerVersion: '3'
+
+      - name: Deploy Functions
+        run: |
+          echo "Functions are automatically deployed with Pages"
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+
+  test:
+    runs-on: ubuntu-latest
+    name: Run Tests
+    needs: deploy
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Wait for deployment
+        run: sleep 30
+
+      - name: Test health endpoint
+        run: |
+          curl -f https://resilience-solutions.pages.dev/api/health || exit 1
+
+      - name: Test API endpoints
+        run: |
+          # Test leads endpoint (GET)
+          curl -f https://resilience-solutions.pages.dev/api/leads || exit 1
+          
+          # Test estimates endpoint (GET)
+          curl -f https://resilience-solutions.pages.dev/api/estimates || exit 1
+          
+          # Test messages endpoint (GET)
+          curl -f https://resilience-solutions.pages.dev/api/messages || exit 1
+
+      - name: Notify on success
+        if: success()
+        run: |
+          echo "✅ Deployment and tests successful!"
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "❌ Deployment or tests failed!"
+          exit 1
